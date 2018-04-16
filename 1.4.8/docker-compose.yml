@@ -1,0 +1,8 @@
+version: '3.5'
+
+services:
+  proxysql:
+    image: labbsr0x/proxysql:1.4.8
+    build: .
+    ports:
+      - 6032:6032 # admin port

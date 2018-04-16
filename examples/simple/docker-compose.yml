@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+
+  proxysql:
+    image: labbsr0x/proxysql:1.4.8
+    restart: always
+    links:
+      - mysql-1:mysql-1
+      - mysql-2:mysql-2
+      - mysql-3:mysql-3
+    ports:
+      - 6032:6032 # admin local port
+      - 6033:6033 # client port
+
+  mysql-1:
+    image: labbsr0x/mysql:5.7-sysbench
+    build: .
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 33061:3306
+
+  mysql-2:
+    image: labbsr0x/mysql:5.7-sysbench
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 33062:3306
+  
+  mysql-3:
+    image: labbsr0x/mysql:5.7-sysbench
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 33063:3306
+      
