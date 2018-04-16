@@ -103,6 +103,7 @@ To see it all in action,
 docker run --rm --link proxysql_simple_test:proxysql --net=bridge labbsr0x/mysql:5.7-sysbench sysbench --num-threads=4 --max-time=20 --debug=off --test=oltp --mysql-user='root' --mysql-password='root' --oltp-table-size=100 --mysql-host=proxysql --mysql-port=6033 --mysql-db=dbtest run
 ```
 4. In the ProxySQL admin console, check the query stats by executing: `SELECT hostgroup hg, sum_time, count_star, digest_text FROM stats_mysql_query_digest ORDER BY sum_time DESC;`. You may see something like this (with all the queries proxied to the hostgroup 1):
+```
 +----+----------+------------+-------------------------------------------------------------------+
 | hg | sum_time | count_star | digest_text                                                       |
 +----+----------+------------+-------------------------------------------------------------------+
@@ -119,6 +120,7 @@ docker run --rm --link proxysql_simple_test:proxysql --net=bridge labbsr0x/mysql
 | 1  | 1598248  | 4638       | DELETE from sbtest where id=?                                     |
 | 1  | 500      | 1          | SHOW TABLE STATUS LIKE ?                                          |
 +----+----------+------------+-------------------------------------------------------------------+
+```
 
 5. In the ProxySQL admin console, reset again the **query stats** by executing: `SELECT * FROM stats_mysql_query_digest_reset LIMIT 1;`
 6. In the ProxySQL admin console, **enable** the query rules by executing: `UPDATE mysql_query_rules SET active=1;LOAD MYSQL QUERY RULES TO RUNTIME;`
@@ -127,13 +129,14 @@ docker run --rm --link proxysql_simple_test:proxysql --net=bridge labbsr0x/mysql
 docker run --rm --link proxysql_simple_test:proxysql --net=bridge labbsr0x/mysql:5.7-sysbench sysbench --num-threads=4 --max-time=20 --debug=off --test=oltp --mysql-user='root' --mysql-password='root' --oltp-table-size=100 --mysql-host=proxysql --mysql-port=6033 --mysql-db=dbtest run
 ```
 8. In the ProxySQL admin console, check the query stats by executing: `SELECT hostgroup hg, sum_time, count_star, digest_text FROM stats_mysql_query_digest ORDER BY sum_time DESC;`. You may see now something like this (with all the queries that matched the regex proxied to the hostgroup 2):
+```
 +----+----------+------------+-------------------------------------------------------------------+
 | hg | sum_time | count_star | digest_text                                                       |
 +----+----------+------------+-------------------------------------------------------------------+
-| **2**  | 18257092 | 50314      | SELECT c from sbtest where id=?                                   |
+| 2  | 18257092 | 50314      | SELECT c from sbtest where id=?                                   |
 | 1  | 10277919 | 4343       | COMMIT                                                            |
 | 1  | 4813961  | 9402       | UPDATE sbtest set k=k+? where id=?                                |
-| **2**  | 2689924  | 5035       | SELECT DISTINCT c from sbtest where id between ? and ? order by c |
+| 2  | 2689924  | 5035       | SELECT DISTINCT c from sbtest where id between ? and ? order by c |
 | 1  | 2215977  | 5035       | SELECT c from sbtest where id between ? and ? order by c          |
 | 1  | 2213640  | 5035       | SELECT c from sbtest where id between ? and ?                     |
 | 1  | 2201888  | 5035       | BEGIN                                                             |
@@ -143,7 +146,7 @@ docker run --rm --link proxysql_simple_test:proxysql --net=bridge labbsr0x/mysql
 | 1  | 1371385  | 4343       | DELETE from sbtest where id=?                                     |
 | 1  | 681      | 1          | SHOW TABLE STATUS LIKE ?                                          |
 +----+----------+------------+-------------------------------------------------------------------+
-
+```
 ## Running the admin
 
 `docker-compose exec proxysql mysql -u admin -padmin -h 127.0.0.1 -P6032 --prompt='Admin> '`
