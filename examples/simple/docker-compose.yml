@@ -4,6 +4,8 @@ services:
 
   proxysql:
     image: labbsr0x/proxysql:1.4.8
+    container_name: proxysql_simple_test
+    network_mode: bridge
     restart: always
     links:
       - mysql-1:mysql-1
@@ -16,6 +18,7 @@ services:
   mysql-1:
     image: labbsr0x/mysql:5.7-sysbench
     build: .
+    network_mode: bridge
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -24,6 +27,7 @@ services:
 
   mysql-2:
     image: labbsr0x/mysql:5.7-sysbench
+    network_mode: bridge
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
@@ -32,6 +36,7 @@ services:
   
   mysql-3:
     image: labbsr0x/mysql:5.7-sysbench
+    network_mode: bridge
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
